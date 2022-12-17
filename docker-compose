@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  war:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: myapp:1.0
+    volumes:
+      - "data:/webapps/"
+
+  web:
+    depends_on:
+      - war
+    image: tomcat
+    volumes:
+      - "data:/usr/local/tomcat/webapps/"
+    ports:
+      - '8080:8080'
+
+volumes:
+    data:
