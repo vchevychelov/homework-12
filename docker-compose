@@ -4,11 +4,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: myapp:1.0
+    image: myapp:0.1
     volumes:
       - "data:/webapps/"
-
-  web:
+  tomcat:
     depends_on:
       - war
     image: tomcat
@@ -16,6 +15,19 @@ services:
       - "data:/usr/local/tomcat/webapps/"
     ports:
       - '8080:8080'
-
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'mysql'
+      MYSQL_USER: 'mysql'
+      MYSQL_PASSWORD: 'mysql'
+      MYSQL_ROOT_PASSWORD: 'mysql'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - "data:/var/lib/mysql"
 volumes:
     data:
