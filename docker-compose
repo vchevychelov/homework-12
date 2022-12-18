@@ -4,17 +4,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: myapp:0.1
+    image: myapp:0.2
     volumes:
       - "data:/webapps/"
+      - "config:/config/"
   tomcat:
     depends_on:
       - war
     image: tomcat:6.0
     volumes:
       - "data:/usr/local/tomcat/webapps/"
-      - ./config/Config.properties:/usr/local/tomcat/ROOT/Config.properties
-#      - ./connector/mysql-connector-j-8.0.31.jar:/usr/local/tomcat/webapps/App42PaaS-Java-MySQL-Sample-0.0.1-SNAPSHOT/WEB-INF/lib/mysql-connector-j-8.0.31.jar
+      - "config:/usr/local/tomcat/ROOT/"
     ports:
       - '8880:8080'
     restart: always
@@ -28,7 +28,6 @@ services:
       app42.paas.db.name: dd
 
   mysql:
-#    image: mysql:8.0.31
     image: mysql:5
     restart: always
     environment:
@@ -47,4 +46,5 @@ services:
 
 volumes:
     data:
+    config:
     mysql-database-data-volume:
