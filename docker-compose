@@ -10,24 +10,41 @@ services:
   tomcat:
     depends_on:
       - war
-    image: tomcat
+    image: tomcat:6.0
     volumes:
       - "data:/usr/local/tomcat/webapps/"
+      - ./config/Config.properties:/usr/local/tomcat/ROOT/Config.properties
+#      - ./connector/mysql-connector-j-8.0.31.jar:/usr/local/tomcat/webapps/App42PaaS-Java-MySQL-Sample-0.0.1-SNAPSHOT/WEB-INF/lib/mysql-connector-j-8.0.31.jar
     ports:
-      - '8080:8080'
+      - '8880:8080'
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      app42.paas.db.username: acp4pogynvaeidfj
+      app42.paas.db.port: 3306
+      app42.paas.db.password: jc31d2qyy7h9jv5jn1u9uosjksxzaizw
+      app42.paas.db.ip: 130.193.37.158
+      app42.paas.db.name: dd
+
   mysql:
-    image: mysql:8.0
+#    image: mysql:8.0.31
+    image: mysql:5
     restart: always
     environment:
-      MYSQL_DATABASE: 'mysql'
-      MYSQL_USER: 'mysql'
-      MYSQL_PASSWORD: 'mysql'
-      MYSQL_ROOT_PASSWORD: 'mysql'
+      MYSQL_DATABASE: dd
+      MYSQL_USER: acp4pogynvaeidfj
+      MYSQL_PASSWORD: jc31d2qyy7h9jv5jn1u9uosjksxzaizw
+      MYSQL_ROOT_PASSWORD: jc31d2qyy7h9jv5jn1u9uosjksxzaizw
     ports:
       - '3306:3306'
     expose:
       - '3306'
     volumes:
-      - "data:/var/lib/mysql"
+      - "mysql-database-data-volume:/var/lib/mysql"
+    volumes:
+      - ./docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+
 volumes:
     data:
+    mysql-database-data-volume:
